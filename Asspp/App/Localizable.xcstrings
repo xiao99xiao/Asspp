@@ -1,6 +1,102 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Platform" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platform"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平台"
+          }
+        }
+      }
+    },
+    "Export IPA" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export IPA"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出 IPA"
+          }
+        }
+      }
+    },
+    "Unsupported App Store region." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsupported App Store region."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不支持此 App Store 地区。"
+          }
+        }
+      }
+    },
+    "Apple TV packages can be exported from the Downloads page for use on Apple TV." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple TV packages can be exported from the Downloads page for use on Apple TV."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple TV 安装包可从下载页面导出，用于 Apple TV。"
+          }
+        }
+      }
+    },
+    "This is a tvOS package for Apple TV. It cannot be installed on an iPhone or iPad." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is a tvOS package for Apple TV. It cannot be installed on an iPhone or iPad."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这是用于 Apple TV 的 tvOS 安装包，无法安装到 iPhone 或 iPad。"
+          }
+        }
+      }
+    },
+    "This account is used to download this Apple TV package." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This account is used to download this Apple TV package."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此账号用于下载这个 Apple TV 安装包。"
+          }
+        }
+      }
+    },
     "" : {
       "shouldTranslate" : false
     },

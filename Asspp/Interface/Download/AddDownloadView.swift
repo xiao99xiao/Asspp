@@ -71,8 +71,13 @@ struct AddDownloadView: View {
                     searchKeyFocused = false
                     do {
                         guard let countryCode = ApplePackage.Configuration.countryCode(for: account.account.store) else { return }
-                        let software = try await ApplePackage.Lookup.lookup(bundleID: bundleID, countryCode: countryCode)
-                        let appPackage = AppStore.AppPackage(software: software)
+                        let entityType = searchType
+                        let software = try await ApplePackage.Lookup.lookup(
+                            bundleID: bundleID.trimmingCharacters(in: .whitespacesAndNewlines),
+                            countryCode: countryCode,
+                            entityType: entityType,
+                        )
+                        let appPackage = AppStore.AppPackage(software: software, entityType: entityType)
                         try await dvm.startDownload(for: appPackage, accountID: account.id)
                         hint = String(localized: "Download Requested")
                         hintIsError = false
@@ -89,7 +94,11 @@ struct AddDownloadView: View {
                 .disabled(account == nil)
             } footer: {
                 if hint.isEmpty {
-                    Text("The package can be installed later from the Downloads page.")
+                    if searchType == .appleTV {
+                        Text("Apple TV packages can be exported from the Downloads page for use on Apple TV.")
+                    } else {
+                        Text("The package can be installed later from the Downloads page.")
+                    }
                 } else {
                     Text(hint)
                         .foregroundStyle(hintIsError ? .red : .secondary)

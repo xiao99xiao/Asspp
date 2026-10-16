@@ -142,6 +142,8 @@ struct ProductView: View {
     var packageDetails: some View {
         Section {
             CopyableRow(label: "Bundle ID", value: archive.package.software.bundleID, monospaced: true)
+            Text("Platform")
+                .badge(archive.package.entityType.rawValue)
             Text("Developer")
                 .badge(archive.package.software.sellerName)
             if !archive.package.software.primaryGenreName.isEmpty {
@@ -248,7 +250,11 @@ struct ProductView: View {
                 Text(hint.message)
                     .foregroundStyle(hint.color ?? .primary)
             } else {
-                Text("Package can be installed later in download page.")
+                if archive.package.entityType == .appleTV {
+                    Text("Apple TV packages can be exported from the Downloads page for use on Apple TV.")
+                } else {
+                    Text("Package can be installed later in download page.")
+                }
             }
         }
     }
@@ -256,8 +262,7 @@ struct ProductView: View {
 
 extension AppStore.AppPackage {
     var displaySupportedDevicesIcon: String {
-        // TODO: assuming iPhone for now
-        "iphone"
+        entityType.iconName
     }
 }
 

@@ -13,6 +13,7 @@ Asspp is a powerful client designed for users who need to manage **multiple Appl
 - **🌍 Multi-Region Access**: Browse and search the US, Japan, China, or any other App Store region seamlessly. No more switching system accounts just to check an app.
 - **👥 Multi-Account Support**: Add unlimited Apple IDs. Asspp automatically uses the correct account for the store you are browsing.
 - **📦 IPA Management**: Download official, signed IPAs directly from Apple's servers for backup or sideloading.
+- **📺 Apple TV IPA Downloads**: Choose AppleTV in Search or Direct Download to request tvOS versions, including version history. Completed packages are validated for AppleTVOS and can be exported from Downloads.
 - **⏪ History Versions**: Need an older version of an app? Asspp makes it easy to find and download previous releases.
 - **📱 Cross-Platform**: Native experience on both **iOS** and **macOS**.
 

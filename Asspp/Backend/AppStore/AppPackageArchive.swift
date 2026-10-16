@@ -98,7 +98,11 @@ class AppPackageArchive {
         Task {
             do {
                 let versions = try await AppStore.this.withAccount(id: accountIdentifier) { userAccount in
-                    try await VersionFinder.list(account: &userAccount.account, bundleIdentifier: bundleID)
+                    try await VersionFinder.list(
+                        account: &userAccount.account,
+                        bundleIdentifier: bundleID,
+                        entityType: self.package.entityType,
+                    )
                 }
                 self.versionIdentifiers = versions.reversed()
             } catch {

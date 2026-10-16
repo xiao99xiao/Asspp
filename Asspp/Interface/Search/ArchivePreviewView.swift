@@ -46,9 +46,14 @@ struct ArchivePreviewView: View {
                     Text(archive.software.version)
                         .foregroundStyle(.secondary)
                 }
-                Text(archive.software.sellerName)
-                    .lineLimit(1)
-                    .foregroundStyle(.secondary)
+                HStack {
+                    Text(archive.software.sellerName)
+                        .lineLimit(1)
+                    Spacer()
+                    Label(archive.entityType.rawValue, systemImage: archive.displaySupportedDevicesIcon)
+                        .font(.caption)
+                }
+                .foregroundStyle(.secondary)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

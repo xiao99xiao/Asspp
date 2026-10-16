@@ -186,6 +186,9 @@ struct SearchView: View {
     }
 
     func search() {
+        let term = searchKey
+        let region = searchRegion
+        let entityType = searchType
         searchKeyFocused = false
         searching = true
         searchError = nil
@@ -193,27 +196,31 @@ struct SearchView: View {
         Task {
             do {
                 var result = try await ApplePackage.Searcher.search(
-                    term: searchKey,
-                    countryCode: searchRegion,
+                    term: term,
+                    countryCode: region,
                     limit: 32,
-                    entityType: searchType,
+                    entityType: entityType,
                 )
                 if let app = try? await ApplePackage.Lookup.lookup(
-                    bundleID: searchKey,
-                    countryCode: searchRegion,
+                    bundleID: term,
+                    countryCode: region,
+                    entityType: entityType,
                 ) {
+                    result.removeAll { $0.id == app.id }
                     result.insert(app, at: 0)
                 }
                 logger.info("search completed: \(result.count) results for term=\(searchKey)")
                 await MainActor.run {
                     searching = false
-                    searchResult = result.map { AppStore.AppPackage(software: $0) }
+                    guard searchRegion == region, searchType == entityType, searchKey == term else { return }
+                    searchResult = result.map { AppStore.AppPackage(software: $0, entityType: entityType) }
                     searchError = nil
                 }
             } catch {
                 logger.error("search failed: term=\(searchKey) error=\(error.localizedDescription)")
                 await MainActor.run {
                     searching = false
+                    guard searchRegion == region, searchType == entityType, searchKey == term else { return }
                     searchResult = []
                     searchError = error.localizedDescription
                 }

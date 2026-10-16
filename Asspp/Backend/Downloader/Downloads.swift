@@ -183,6 +183,8 @@ class Downloads {
         try FileManager.default.moveItem(at: downloadedFile, to: tempFile)
         defer { try? FileManager.default.removeItem(at: tempFile) }
 
+        try PackagePlatformValidator.ensurePackage(at: tempFile, supports: manifest.package.entityType)
+
         logger.info("injecting signatures: \(manifest.id)")
         try await SignatureInjector.inject(
             sinfs: manifest.signatures,

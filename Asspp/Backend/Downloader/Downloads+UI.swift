@@ -61,14 +61,26 @@ extension Downloads {
 extension Downloads {
     func startDownload(for package: AppStore.AppPackage, accountID: String) async throws {
         try await AppStore.this.withAccount(id: accountID) { account in
+            // Both download endpoints need an explicit version to select the
+            // correct platform for apps sharing an App Store ID across iOS/tvOS.
+            guard let countryCode = ApplePackage.Configuration.countryCode(for: account.account.store) else {
+                throw NSError(
+                    domain: "Asspp.Download",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: String(localized: "Unsupported App Store region.")],
+                )
+            }
+            let versionID = try await package.resolveExternalVersionID(countryCode: countryCode)
             let downloadOutput = try await ApplePackage.Download.download(
                 account: &account.account,
                 app: package.software,
-                externalVersionID: package.externalVersionID,
+                externalVersionID: versionID,
             )
+            var downloadedPackage = package
+            downloadedPackage.software.version = downloadOutput.bundleShortVersionString
             let request = try Downloads.this.add(request: .init(
                 account: account,
-                package: package,
+                package: downloadedPackage,
                 downloadOutput: downloadOutput,
             ))
             Downloads.this.resume(request: request)

@@ -47,6 +47,8 @@ struct PackageView: View {
 
             Section {
                 CopyableRow(label: "Bundle ID", value: archive.software.bundleID, monospaced: true)
+                Text("Platform")
+                    .badge(archive.entityType.rawValue)
                 Text("Version")
                     .badge(archive.software.version)
                 Text("Developer")
@@ -66,43 +68,55 @@ struct PackageView: View {
             }
 
             if pkg.completed {
-                #if os(macOS)
-                    DeviceCTLInstallSection(package: pkg)
-                #endif
-                #if os(iOS)
+                if archive.entityType == .appleTV {
                     Section {
-                        AsyncButton {
-                            installer = try await Installer(archive: archive, path: url)
-                        } label: {
-                            Text("Install")
-                        }
-                        .disabledWhenLoading()
-                        .sheet(item: $installer) {
-                            installer?.destroy()
-                            installer = nil
-                        } content: {
-                            InstallerView(installer: $0)
-                        }
-
-                        Button("Install via AirDrop") {
-                            let newUrl = temporaryDirectory
-                                .appendingPathComponent("\(archive.software.bundleID)-\(archive.software.version)")
-                                .appendingPathExtension("ipa")
-                            try? FileManager.default.removeItem(at: newUrl)
-                            try? FileManager.default.copyItem(at: url, to: newUrl)
-                            AirDrop(items: [newUrl])
+                        ShareLink(item: url) {
+                            Label("Export IPA", systemImage: "square.and.arrow.up")
                         }
                     } header: {
                         Text("Control")
                     } footer: {
-                        if error.isEmpty {
-                            Text("Direct install may have limitations that cannot be bypassed. Use AirDrop if possible on another device.")
-                        } else {
-                            Text(error)
-                                .foregroundStyle(.red)
-                        }
+                        Text("This is a tvOS package for Apple TV. It cannot be installed on an iPhone or iPad.")
                     }
-                #endif
+                } else {
+                    #if os(macOS)
+                        DeviceCTLInstallSection(package: pkg)
+                    #endif
+                    #if os(iOS)
+                        Section {
+                            AsyncButton {
+                                installer = try await Installer(archive: archive, path: url)
+                            } label: {
+                                Text("Install")
+                            }
+                            .disabledWhenLoading()
+                            .sheet(item: $installer) {
+                                installer?.destroy()
+                                installer = nil
+                            } content: {
+                                InstallerView(installer: $0)
+                            }
+
+                            Button("Install via AirDrop") {
+                                let newUrl = temporaryDirectory
+                                    .appendingPathComponent("\(archive.software.bundleID)-\(archive.software.version)")
+                                    .appendingPathExtension("ipa")
+                                try? FileManager.default.removeItem(at: newUrl)
+                                try? FileManager.default.copyItem(at: url, to: newUrl)
+                                AirDrop(items: [newUrl])
+                            }
+                        } header: {
+                            Text("Control")
+                        } footer: {
+                            if error.isEmpty {
+                                Text("Direct install may have limitations that cannot be bypassed. Use AirDrop if possible on another device.")
+                            } else {
+                                Text(error)
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                    #endif
+                }
 
                 Section {
                     NavigationLink("Content Viewer") {
@@ -178,7 +192,11 @@ struct PackageView: View {
             } header: {
                 Text("Account")
             } footer: {
-                Text("This account is used to download this package. If you choose to AirDrop, your target device must sign in or previously signed in to this account and have at least one app installed.")
+                if archive.entityType == .appleTV {
+                    Text("This account is used to download this Apple TV package.")
+                } else {
+                    Text("This account is used to download this package. If you choose to AirDrop, your target device must sign in or previously signed in to this account and have at least one app installed.")
+                }
             }
 
             Section {
